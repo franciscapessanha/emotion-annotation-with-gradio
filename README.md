@@ -75,7 +75,7 @@ pip install gradio pandas mutagen openpyxl huggingface_hub
 
 1. Run the app:  
    ```bash
-   python app_huggingface.py
+   python app.py
    ```
 2. The app will open in your browser.  
 3. Select emotions from the dropdown for each audio clip.  
