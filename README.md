@@ -52,7 +52,7 @@ Ensure the audio files are placed inside the corresponding folders before starti
 ## 🔧 Usage
 1. Run the app:
 ```bash
-python app.py
+python app_huggingface.py
 ```
 2. The app opens in your browser.
 3. Select emotions from the dropdown for each audio clip.

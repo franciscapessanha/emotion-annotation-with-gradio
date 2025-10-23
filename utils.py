@@ -10,8 +10,16 @@ import json
 from text_explanations import *
 from utils import *
 
-persistent_storage = Path('/data')
-password_files = os.getenv("password_files")
+HUGGINGFACE = False
+
+if HUGGINGFACE:
+    # In huggingface only files stored in the persistent storage will be maintained
+    storage = Path('/data')
+    # You can create secret variables under Settings -> Variables and secrets. This password will be used to access
+    # the persistent storage via the "Access Files" tab
+    password_files = os.getenv("password_files")
+else:
+    storage = 'data'
 
 
 def get_audio_duration(file_path):
@@ -29,7 +37,7 @@ def get_storage(password):
     if password == password_files:
         # Get the list of file paths and calculate the total usage
         files = [
-            file for file in persistent_storage.glob("**/*.csv") if file.is_file()
+            file for file in storage.glob("**/*.csv") if file.is_file()
         ]
         
         # Calculate total usage (in bytes)
@@ -47,3 +55,12 @@ def get_storage(password):
 def count_clicks(n_clicks):
     n_clicks = n_clicks + 1
     return n_clicks
+
+
+def state_to_number(*state_obj_list):
+    list_numbers = []
+    for state_obj in state_obj_list:
+        number_obj = gr.Number(state_obj, visible=False)
+        list_numbers.append(number_obj)
+
+    return list_numbers

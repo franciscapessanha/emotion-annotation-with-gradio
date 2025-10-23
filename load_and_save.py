@@ -11,18 +11,22 @@ from text_explanations import *
 from utils import *
 from datetime import datetime
 
-possible_ids = {'Tiger-001': 0, 'Falcon-002': 0, 
-                'Elephant-003': 1, 'Panther-004': 1,
-                'Zebra-005': 2, 'Wolf-006': 2,
-                'Koala-007': 3, 'Otter-008': 3,
-                'Leopard-009': 4, 'Panda-010': 4,
-                'Cheetah-011': 5, 'Gorilla-012': 5,
-                'Dolphin-013' : 6, 'Lynx-014': 6,
-                'Moose-015': 7, 'Raccoon-016': 7,
-                'Rabbit-017': 0, 'Eagle-018': 8, 'Jaguar-019': 8}
+"""
+possible_ids = {"annotator": "annotation_group"} for example:
 
-persistent_storage = Path('/data')
-password_files = os.getenv("password_files")
+possible_ids = {'Elephant-003': 1, 'Panther-004': 1,
+                 'Zebra-005': 2, 'Wolf-006': 2,
+                 'Koala-007': 3, 'Otter-008': 3,
+                 'Leopard-009': 4, 'Panda-010': 4,
+                 'Cheetah-011': 5, 'Gorilla-012': 5,
+                 'Dolphin-013' : 6, 'Lynx-014': 6,
+                 'Moose-015': 7, 'Raccoon-016': 7,
+                 'Rabbit-017': 0, 'Eagle-018': 8, 'Jaguar-019': 8}
+There should be an csv file named "group_#number.csv" under data with the columns: sample_id,participant,start,end,sentence
+"""
+possible_ids = {'Example-001': 0, 'Example-002': 0}
+
+
 
 def load_first_example(annotations_df, file_list_df, id, completed, index):
     """ Loads and first example and updates index
@@ -41,7 +45,7 @@ def load_first_example(annotations_df, file_list_df, id, completed, index):
     * index: updated current index
 
     """
-    path_ann = f'{persistent_storage}/{id}_annotations.csv'
+    path_ann = f'{storage}/{id}_annotations.csv'
 
     if os.path.exists(path_ann):
         annotations_df = pd.read_csv(path_ann, keep_default_na=False)
@@ -78,7 +82,7 @@ def load_example(annotations_df, file_list_df, index):
     """
     if index < len(file_list_df):
         row = file_list_df.iloc[index]
-        audio_path = os.path.join(persistent_storage, 'files_to_annotate_2round', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
+        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
         sentence = row["sentence"]
 
         # If the user already made an annotation for this example, gradio will return said annotation
@@ -90,11 +94,11 @@ def load_example(annotations_df, file_list_df, index):
         start = row['start']
         end = row['end']
         duration = get_audio_duration(audio_path)
-        print(f'start/end/duration (load example) - {start} {end} {duration}')
+
     else:
         index -= 1
         row = file_list_df.iloc[index]
-        audio_path = os.path.join(persistent_storage, 'files_to_annotate_2round', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
+        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
         sentence = row["sentence"]
 
         # If the user already made an annotation for this example, gradio will return said annotation
@@ -106,7 +110,6 @@ def load_example(annotations_df, file_list_df, index):
         start = row['start']
         end = row['end']
         duration = get_audio_duration(audio_path)
-        print(f'start/end/duration (load example) - {start} {end} {duration}')
 
         gr.Warning("This is the last example, well done!")
     return sentence, audio_path, ann['emotion'], ann['confidence'], ann["comments"], ann['n_clicks'], start, end, duration
@@ -139,11 +142,11 @@ def save_annotation(annotations_df, file_list_df, emotions, confidence, comments
     else:
         annotations_df.loc[len(annotations_df)] = [sample_id, sentence, emotions, confidence, comments, n_clicks]
         ann_completed += 1
-    annotations_df.to_csv(f"{persistent_storage}/{participant_id}_annotations.csv", index=False)  # Save to a CSV file
+    annotations_df.to_csv(f"{storage}/{participant_id}_annotations.csv", index=False)  # Save to a CSV file
 
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-    annotations_df.to_csv(f"{persistent_storage}/temp/{participant_id}_annotations_{timestamp}.csv", index=False)  # Save to a CSV file
+    annotations_df.to_csv(f"{storage}/temp/{participant_id}_annotations_{timestamp}.csv", index=False)  # Save to a CSV file
     
     return annotations_df, ann_completed
 
@@ -190,7 +193,7 @@ def next_example(annotations_df, file_list_df, emotions, confidence, comments, n
         
         else:
            gr.Warning("This is the last example, well done!")
-    print(f'current_index {current_index}')
+
     
     return annotations_df, sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index
 
@@ -237,7 +240,7 @@ def deactivate_participant_id(annotations_df, file_list_df, total, participant_i
 
 
     if participant_id in possible_ids.keys():
-        file_list_df = pd.read_csv(os.path.join(persistent_storage, 'files_to_annotate_2round', f'group_{possible_ids[participant_id]}_v2.csv'), keep_default_na=False)
+        file_list_df = pd.read_csv(os.path.join(storage, 'files_to_annotate', f'group_{possible_ids[participant_id]}.csv'), keep_default_na=False)
 
         total = len(file_list_df)
     

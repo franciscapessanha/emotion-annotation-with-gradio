@@ -11,17 +11,6 @@ from text_explanations import *
 from utils import *
 from load_and_save import *
 
-persistent_storage = Path('/data')
-password_files = os.getenv("password_files")
-
-def state_to_number(*state_obj_list):
-
-    list_numbers = []
-    for state_obj in state_obj_list:
-        number_obj = gr.Number(state_obj, visible = False)
-        list_numbers.append(number_obj)
-      
-    return list_numbers
 
 
 # ===================
@@ -30,8 +19,6 @@ def state_to_number(*state_obj_list):
 with (gr.Blocks(theme=gr.themes.Soft(), css = css) as demo):
     # List of all audio files to annotate
 
-
-    
     # Instructions for emotion annotation
     with gr.Sidebar(open = True) as sidebar:
         participant_id = gr.Textbox(label='What is your participant ID?', interactive = True)
@@ -45,22 +32,22 @@ with (gr.Blocks(theme=gr.themes.Soft(), css = css) as demo):
             description = gr.HTML(examples_explanation, padding = False)
 
             with gr.Accordion(label = "Neutral", open= False):
-                neutral_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/neutral.wav', label = "Neutral")
+                neutral_audio = gr.Audio(value=f'{storage}/emotion_examples/neutral.wav', label ="Neutral")
             
             with gr.Accordion(label = "Happy",  open = False):
-                happy_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/happy_low.wav', label = "Happy (Low Intensity)")
-                happy_int_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/happy_intense.wav', label = "Happy (High Intensity)")
+                happy_audio = gr.Audio(value=f'{storage}/emotion_examples/happy_low.wav', label ="Happy (Low Intensity)")
+                happy_int_audio = gr.Audio(value=f'{storage}/emotion_examples/happy_intense.wav', label ="Happy (High Intensity)")
             
             with gr.Accordion(label = "Sad",  open = False):
-                sad_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/sad_low.wav', label = "Sad (Low Intensity)")
-                sad_int_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/sad_intense.wav', label = "Sad (High Intensity)")
+                sad_audio = gr.Audio(value=f'{storage}/emotion_examples/sad_low.wav', label ="Sad (Low Intensity)")
+                sad_int_audio = gr.Audio(value=f'{storage}/emotion_examples/sad_intense.wav', label ="Sad (High Intensity)")
 
             with gr.Accordion(label = "Anger",  open = False):
-                angry_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/angry_low.wav', label = "Anger (Low Intensity)")
-                angry_int_audio = gr.Audio(value=f'{persistent_storage}/emotion_examples/angry_intense.wav', label = "Anger (High Intensity)")
+                angry_audio = gr.Audio(value=f'{storage}/emotion_examples/angry_low.wav', label ="Anger (Low Intensity)")
+                angry_int_audio = gr.Audio(value=f'{storage}/emotion_examples/angry_intense.wav', label ="Anger (High Intensity)")
 
         instructions = gr.HTML(start_annotating, padding = False)
-        image = gr.Image(label = "Annotation Interface", value = f"{persistent_storage}/instructions_annotation.png", container = False, type = "filepath", show_label = False, show_download_button = False, show_fullscreen_button = False,show_share_button = False)
+        image = gr.Image(label = "Annotation Interface", value = f"{storage}/instructions_annotation.png", container = False, type ="filepath", show_label = False, show_download_button = False, show_fullscreen_button = False, show_share_button = False)
         
     
     with gr.Tab("Annotation Interface"):
@@ -158,18 +145,19 @@ with (gr.Blocks(theme=gr.themes.Soft(), css = css) as demo):
         sidebar.collapse(None, [], [start, end, duration, current_index, ann_completed, total], js = js_progress_bar)
         sidebar.expand(None, [], [start, end, duration, current_index,ann_completed, total], js = js_progress_bar)
         
-    
-    with gr.Tab("Access Files"):
+    if HUGGINGFACE: # The interface to access files is only necessary when using huggingface.
+        # Files are easily accessible when ran locally.
+        with gr.Tab("Access Files"):
 
-        with gr.Row():
-            password = gr.Textbox(label="Enter Password", type="password")
-            get_files_button = gr.Button("Get Files")
-        
-        with gr.Column():
-            files = gr.File(label="Download Files", file_count="multiple", interactive=True)
-            storage = gr.Text(label="Total Usage")
-        
-        get_files_button.click(fn=get_storage, inputs=[password], outputs=[files, storage])
+            with gr.Row():
+                password = gr.Textbox(label="Enter Password", type="password")
+                get_files_button = gr.Button("Get Files")
+
+            with gr.Column():
+                files = gr.File(label="Download Files", file_count="multiple", interactive=True)
+                storage_use = gr.Text(label="Total Usage")
+
+            get_files_button.click(fn=get_storage, inputs=[password], outputs=[files, storage_use])
 
 
         
