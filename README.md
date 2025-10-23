@@ -87,8 +87,7 @@ pip install gradio pandas mutagen openpyxl huggingface_hub
 ## 🎯 Deployment on Hugging Face
 
 This app is designed to work on **Hugging Face Spaces** with persistent storage at `/data`.  
-
-To deploy:
-1. Upload your app code.  
-2. Place audio files in `/data/files_to_annotate/`.  
+1. Create a "New Space" and select "Gradio" as the "Space SDK".
+2. Upload your app code.  
+2. Place necessary files under `/data/` (See structure above).  
 3. Start the Space and begin annotating!  
