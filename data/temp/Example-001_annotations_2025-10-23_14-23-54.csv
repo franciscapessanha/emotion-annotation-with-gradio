@@ -1,0 +1,6 @@
+sample_id,sentence,emotion,confidence,comments,n_clicks
+010-0002,"20 years old at a women's college, feminist, lesbian, loud, passionate person.",Angry,Somewhat Uncertain,,0
+010-0024,"Well, I had been very sick as a child and had been hospitalized a lot, so I actually had a pretty good relationship with it.",Happy,Somewhat Uncertain,,0
+010-0032,"And my friend Laura, who was sitting next to me, said, I'm not going to make it through this meeting.",Angry,Somewhat Uncertain,,0
+010-0033,"And I said, well, let's just stick it out and see what they have to say.",Neutral,Neutral,,0
+010-0048,Every job I got came from people in Act Up.,Angry,Neutral,,0

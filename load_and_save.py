@@ -189,12 +189,13 @@ def next_example(annotations_df, file_list_df, emotions, confidence, comments, n
         annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id, ann_completed, current_index)
         if current_index < len(file_list_df):
             current_index += 1
-            sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration = load_example(annotations_df, file_list_df, current_index)
-        
+
         else:
            gr.Warning("This is the last example, well done!")
 
-    
+    sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration = load_example(annotations_df,
+                                                                                                       file_list_df,
+                                                                                                       current_index)
     return annotations_df, sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index
 
 def previous_example(annotations_df, file_list_df, emotion, confidence, comments, n_clicks, participant_id,  ann_completed, current_index):
@@ -232,7 +233,7 @@ def previous_example(annotations_df, file_list_df, emotion, confidence, comments
         
     if current_index > 0:
         current_index -= 1
-            
+
     return annotations_df, *load_example(annotations_df, file_list_df, current_index), ann_completed, current_index
 
 
