@@ -108,6 +108,7 @@ with (gr.Blocks(theme=gr.themes.Soft(), css = css) as demo):
             next_button = gr.Button("Next Example", visible = False)
 
         # Go back
+
         previous_button.click(
             previous_example,
             inputs=[annotations, file_list, emotions, confidence, comments, n_clicks, participant_id,  ann_completed , current_index],
@@ -142,8 +143,12 @@ with (gr.Blocks(theme=gr.themes.Soft(), css = css) as demo):
 
         audio_player.play(count_clicks, [n_clicks], [n_clicks])
 
-        sidebar.collapse(None, [], [start, end, duration, current_index, ann_completed, total], js = js_progress_bar)
-        sidebar.expand(None, [], [start, end, duration, current_index,ann_completed, total], js = js_progress_bar)
+        sidebar.collapse(None, [], [start, end, duration, current_index, ann_completed, total]).then(state_to_number, [start, end, duration, current_index, ann_completed, total],
+        [start_temp, end_temp, duration_temp, current_index_temp, ann_completed_temp, total_temp]).then(None, [], [start_temp, end_temp, duration_temp, current_index_temp, ann_completed_temp, total_temp], js = js_progress_bar)
+
+        sidebar.expand(None, [], [start, end, duration, current_index,ann_completed, total]).then(state_to_number, [start, end, duration, current_index, ann_completed, total],
+        [start_temp, end_temp, duration_temp, current_index_temp, ann_completed_temp, total_temp]).then(None, [], [start_temp, end_temp, duration_temp, current_index_temp, ann_completed_temp, total_temp], js = js_progress_bar)
+
         
     if HUGGINGFACE: # The interface to access files is only necessary when using huggingface.
         # Files are easily accessible when ran locally.

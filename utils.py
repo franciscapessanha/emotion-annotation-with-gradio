@@ -58,6 +58,10 @@ def count_clicks(n_clicks):
 
 
 def state_to_number(*state_obj_list):
+    """
+    Convert gr.State to number. This is necessary for any input of the java script
+
+    """
     list_numbers = []
     for state_obj in state_obj_list:
         number_obj = gr.Number(state_obj, visible=False)
