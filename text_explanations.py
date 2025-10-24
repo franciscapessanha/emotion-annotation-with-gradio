@@ -56,6 +56,7 @@ css = """#myProgress {
 
 js_progress_bar = """
     function move(start, end, total_duration, current_index, n_ann, total_ann) {
+
         var elem = document.getElementById("myBar");
         elem.style.width = n_ann/total_ann * 100 + "%";
         index = current_index + 1
@@ -64,7 +65,9 @@ js_progress_bar = """
         const waveform = document.querySelector('#audio_to_annotate #waveform div');
         const shadowRoot = waveform.shadowRoot;
         const canvases = shadowRoot.querySelector('.wrapper');
+
         console.log(canvases.offsetWidth)
+
         const leftOffsetPct = start / total_duration;
         const widthPct = (end - start) / total_duration;
         
@@ -72,6 +75,7 @@ js_progress_bar = """
         const blockColor = getComputedStyle(document.documentElement)
             .getPropertyValue('--block-title-background-fill')
             .trim() || 'red'; // Default to red if variable is not found
+
         // Create a style element for the shadow DOM
         const style = document.createElement('style');
         style.textContent = `
@@ -86,13 +90,16 @@ js_progress_bar = """
             z-index: 999;
             opacity: 0.5;
         }
+
         /* Ensure parent has positioning context */
         .wrapper {
             position: relative;
         }
         `;
+
         // Append the style to the shadow root
         shadowRoot.appendChild(style);
+
         console.log(start + ' ' + end + ' ' + total_duration);
         console.log(n_ann + ' ' + total_ann);
     }

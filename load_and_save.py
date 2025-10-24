@@ -27,7 +27,6 @@ There should be an csv file named "group_#number.csv" under data with the column
 possible_ids = {'Example-001': 0, 'Example-002': 0}
 
 
-
 def load_first_example(annotations_df, file_list_df, id, completed, index):
     """ Loads and first example and updates index
     
@@ -50,11 +49,12 @@ def load_first_example(annotations_df, file_list_df, id, completed, index):
     if os.path.exists(path_ann):
         annotations_df = pd.read_csv(path_ann, keep_default_na=False)
         index = min(len(file_list_df) - 1, len(annotations_df))
-        completed = len(annotations_df) # update how many examples were completed
+        completed = len(annotations_df)  # update how many examples were completed
 
-    else: 
+    else:
         # Initialize an empty DataFrame to store annotations
-        annotations_df = pd.DataFrame(columns=['sample_id', 'sentence', 'emotion', 'confidence', 'comments', 'n_clicks'])
+        annotations_df = pd.DataFrame(
+            columns=['sample_id', 'sentence', 'emotion', 'confidence', 'comments', 'n_clicks'])
 
     return annotations_df, *load_example(annotations_df, file_list_df, index), completed, index
 
@@ -82,13 +82,16 @@ def load_example(annotations_df, file_list_df, index):
     """
     if index < len(file_list_df):
         row = file_list_df.iloc[index]
-        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
+        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0],
+                                  row["sample_id"] + '.wav')
         sentence = row["sentence"]
 
         # If the user already made an annotation for this example, gradio will return said annotation
         ann = (
-            annotations_df.iloc[index].to_dict() if index < len(annotations_df) else {"sample_id": row["sample_id"], "emotion": 'Blank', "confidence": 'Blank',
-                                                                                "comments": '', "n_clicks": 0}
+            annotations_df.iloc[index].to_dict() if index < len(annotations_df) else {"sample_id": row["sample_id"],
+                                                                                      "emotion": 'Blank',
+                                                                                      "confidence": 'Blank',
+                                                                                      "comments": '', "n_clicks": 0}
         )
 
         start = row['start']
@@ -98,13 +101,16 @@ def load_example(annotations_df, file_list_df, index):
     else:
         index -= 1
         row = file_list_df.iloc[index]
-        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0], row["sample_id"] + '.wav')
+        audio_path = os.path.join(storage, 'files_to_annotate', row["sample_id"].split('-')[0],
+                                  row["sample_id"] + '.wav')
         sentence = row["sentence"]
 
         # If the user already made an annotation for this example, gradio will return said annotation
         ann = (
-            annotations_df.iloc[index].to_dict() if index < len(annotations_df) else {"sample_id": row["sample_id"], "emotion": 'Blank', "confidence": 'Blank',
-                                                                                "comments": '', "n_clicks": 0}
+            annotations_df.iloc[index].to_dict() if index < len(annotations_df) else {"sample_id": row["sample_id"],
+                                                                                      "emotion": 'Blank',
+                                                                                      "confidence": 'Blank',
+                                                                                      "comments": '', "n_clicks": 0}
         )
 
         start = row['start']
@@ -112,10 +118,12 @@ def load_example(annotations_df, file_list_df, index):
         duration = get_audio_duration(audio_path)
 
         gr.Warning("This is the last example, well done!")
-    return sentence, audio_path, ann['emotion'], ann['confidence'], ann["comments"], ann['n_clicks'], start, end, duration
+    return sentence, audio_path, ann['emotion'], ann['confidence'], ann["comments"], ann[
+        'n_clicks'], start, end, duration
 
 
-def save_annotation(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id, ann_completed, current_index):
+def save_annotation(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id,
+                    ann_completed, current_index):
     """Save the annotation for the current example.
     
     Parameters:
@@ -137,7 +145,8 @@ def save_annotation(annotations_df, file_list_df, emotions, confidence, comments
 
     # Update or append annotation
     if sample_id in annotations_df["sample_id"].values:
-        annotations_df.loc[annotations_df["sample_id"] == sample_id, ["emotion", "confidence", "comments", "n_clicks"]] = \
+        annotations_df.loc[
+            annotations_df["sample_id"] == sample_id, ["emotion", "confidence", "comments", "n_clicks"]] = \
             [emotions, confidence, comments, n_clicks]
     else:
         annotations_df.loc[len(annotations_df)] = [sample_id, sentence, emotions, confidence, comments, n_clicks]
@@ -146,11 +155,14 @@ def save_annotation(annotations_df, file_list_df, emotions, confidence, comments
 
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
 
-    annotations_df.to_csv(f"{storage}/temp/{participant_id}_annotations_{timestamp}.csv", index=False)  # Save to a CSV file
-    
+    annotations_df.to_csv(f"{storage}/temp/{participant_id}_annotations_{timestamp}.csv",
+                          index=False)  # Save to a CSV file
+
     return annotations_df, ann_completed
 
-def next_example(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id, start, end, duration, ann_completed, current_index):
+
+def next_example(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id, start, end,
+                 duration, ann_completed, current_index):
     """Move to the next example.
 
     Parameters:
@@ -185,21 +197,23 @@ def next_example(annotations_df, file_list_df, emotions, confidence, comments, n
     elif confidence == "Blank":
         gr.Warning("Please fill out the confidence section. 'Blank' is not a valid input.")
 
-    else:  
-        annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotions, confidence, comments, n_clicks, participant_id, ann_completed, current_index)
+    else:
+        annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotions, confidence, comments,
+                                                        n_clicks, participant_id, ann_completed, current_index)
         if current_index < len(file_list_df):
             current_index += 1
 
         else:
-           gr.Warning("This is the last example, well done!")
+            gr.Warning("This is the last example, well done!")
 
     sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration = load_example(annotations_df,
                                                                                                        file_list_df,
                                                                                                        current_index)
     return annotations_df, sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index
 
-def previous_example(annotations_df, file_list_df, emotion, confidence, comments, n_clicks, participant_id,  ann_completed, current_index):
 
+def previous_example(annotations_df, file_list_df, emotion, confidence, comments, n_clicks, participant_id,
+                     ann_completed, current_index):
     """Move to the previous example.
 
     Parameters:
@@ -229,35 +243,43 @@ def previous_example(annotations_df, file_list_df, emotion, confidence, comments
     """
 
     if emotion != "Blank":
-        annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotion, confidence, comments, n_clicks, participant_id,  ann_completed, current_index)
-        
+        annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotion, confidence, comments,
+                                                        n_clicks, participant_id, ann_completed, current_index)
+
     if current_index > 0:
         current_index -= 1
 
     return annotations_df, *load_example(annotations_df, file_list_df, current_index), ann_completed, current_index
 
 
-def deactivate_participant_id(annotations_df, file_list_df, total, participant_id, lets_go, previous_button, next_button, sentence_text, audio_player, emotions, confidence, comments, n_clicks, ann_completed, current_index):
-
-
+def deactivate_participant_id(annotations_df, file_list_df, total, participant_id, lets_go, previous_button,
+                              next_button, sentence_text, audio_player, emotions, confidence, comments, n_clicks,
+                              ann_completed, current_index):
     if participant_id in possible_ids.keys():
-        file_list_df = pd.read_csv(os.path.join(storage, 'files_to_annotate', f'group_{possible_ids[participant_id]}.csv'), keep_default_na=False)
+        file_list_df = pd.read_csv(
+            os.path.join(storage, 'files_to_annotate', f'group_{possible_ids[participant_id]}.csv'),
+            keep_default_na=False)
 
         total = len(file_list_df)
-    
 
-        annotations_df, sentence, audio_player, emotions, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index = load_first_example(annotations_df, file_list_df, participant_id, ann_completed, current_index)
-  
-        participant_id = gr.Textbox(label='What is your participant ID?', value = participant_id, interactive = False)
-        lets_go = gr.Button("Participant selected!", interactive = False)
-        
-        sentence_text = gr.Textbox(label="Transcription", interactive=False, value = sentence)
-        emotions = gr.Radio(["Blank", "Happy", "Sad", "Angry", "Neutral"], label="Predominant Emotion (Check the sidebar for major subclasses)", value =  emotions, visible = True)
-        confidence = gr.Radio(["Blank","Very Uncertain", "Somewhat Uncertain", "Neutral", "Somewhat confident", "Very confident"], label="How confident are you that the annotated emotion is present in the recording?", visible = True, value = confidence)
-        comments = gr.Textbox(label="Comments", visible =True, value = comments)
-        previous_button = gr.Button("Previous Example", visible = True)
-        next_button = gr.Button("Next Example",visible = True)
-        
+        annotations_df, sentence, audio_player, emotions, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index = load_first_example(
+            annotations_df, file_list_df, participant_id, ann_completed, current_index)
+
+        participant_id = gr.Textbox(label='What is your participant ID?', value=participant_id, interactive=False)
+        lets_go = gr.Button("Participant selected!", interactive=False)
+
+        sentence_text = gr.Textbox(label="Transcription", interactive=False, value=sentence)
+        emotions = gr.Radio(["Blank", "Happy", "Sad", "Angry", "Neutral"],
+                            label="Predominant Emotion (Check the sidebar for major subclasses)", value=emotions,
+                            visible=True)
+        confidence = gr.Radio(
+            ["Blank", "Very Uncertain", "Somewhat Uncertain", "Neutral", "Somewhat confident", "Very confident"],
+            label="How confident are you that the annotated emotion is present in the recording?", visible=True,
+            value=confidence)
+        comments = gr.Textbox(label="Comments", visible=True, value=comments)
+        previous_button = gr.Button("Previous Example", visible=True)
+        next_button = gr.Button("Next Example", visible=True)
+
         return annotations_df, file_list_df, participant_id, participant_id, lets_go, total, previous_button, next_button, sentence_text, audio_player, emotions, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index
 
     else:

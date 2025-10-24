@@ -6,5 +6,7 @@ sample_id,sentence,emotion,confidence,comments,n_clicks
 010-0048,Every job I got came from people in Act Up.,Angry,Neutral,,0
 010-0053,"And they were working out of his apartment in Brooklyn, and I was so fearless.",Angry,Somewhat Uncertain,,0
 010-0057,I was fascinated to be in a world that I knew nothing about.,Sad,Neutral,comment,0
-010-0075,They did not want to stand up in front of a room.,Happy,Somewhat Uncertain,comment ,0
+010-0075,They did not want to stand up in front of a room.,Happy,Somewhat Uncertain,comment ,1
 010-0097,"Well, that's where I guess I would say that there were surprises.",Happy,Somewhat Uncertain,,0
+010-0107,We did Sundays at black churches to talk about AIDS.,Angry,Somewhat Uncertain,,0
+010-0120,"Yes, there was a lot of anger, but there was so much fun.",Happy,Very Uncertain,,0
