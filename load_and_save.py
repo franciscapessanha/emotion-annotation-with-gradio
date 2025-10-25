@@ -142,15 +142,18 @@ def save_annotation(annotations_df, file_list_df, emotions, confidence, comments
     row = file_list_df.iloc[current_index]
     sample_id = row["sample_id"]
     sentence = row["sentence"]
-
+    print('sample_id', sample_id)
     # Update or append annotation
     if sample_id in annotations_df["sample_id"].values:
+        print('inside if')
         annotations_df.loc[
             annotations_df["sample_id"] == sample_id, ["emotion", "confidence", "comments", "n_clicks"]] = \
             [emotions, confidence, comments, n_clicks]
     else:
+        print('inside else')
         annotations_df.loc[len(annotations_df)] = [sample_id, sentence, emotions, confidence, comments, n_clicks]
         ann_completed += 1
+
     annotations_df.to_csv(f"{storage}/{participant_id}_annotations.csv", index=False)  # Save to a CSV file
 
     timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
@@ -200,15 +203,16 @@ def next_example(annotations_df, file_list_df, emotions, confidence, comments, n
     else:
         annotations_df, ann_completed = save_annotation(annotations_df, file_list_df, emotions, confidence, comments,
                                                         n_clicks, participant_id, ann_completed, current_index)
-        if current_index < len(file_list_df):
+        if current_index < len(file_list_df) - 1:
+            print('entering if for index')
             current_index += 1
-
         else:
             gr.Warning("This is the last example, well done!")
-
+    print('current index:', current_index)
     sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration = load_example(annotations_df,
                                                                                                        file_list_df,
                                                                                                        current_index)
+
     return annotations_df, sentence, audio_path, emotion, confidence, comments, n_clicks, start, end, duration, ann_completed, current_index
 
 
