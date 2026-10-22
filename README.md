@@ -3,7 +3,12 @@
 A simple and interactive web application for **emotion annotation** of audio files using Python and Gradio.  
 Perfect for annotating `.wav` and `.mp3` files with customizable emotion labels, with data persistence on Hugging Face Spaces or a local setup.  
 
-Try our [huggingface demo](https://huggingface.co/spaces/fpessanha/EmotionAnnotation)!
+<table>
+  <tr>
+    <td><img src="data/annotation%20interface%20-%20desktop.png" alt="Desktop annotation interface" width="800"></td>
+    <td><img src="data/annotation%20interface%20-%20phone.png" alt="Phone annotation interface" width="200"></td>
+  </tr>
+</table>
 
 ---
 
