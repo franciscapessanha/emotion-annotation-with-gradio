@@ -25,11 +25,11 @@ Perfect for annotating `.wav` and `.mp3` files with customizable emotion labels,
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 Make sure you have **Python 3.7+** installed.
 
-### 📦 Requirements
+### Requirements
 - Python 3.7 or higher  
 - Gradio  
 - Pandas  
@@ -51,7 +51,7 @@ pip install gradio pandas mutagen openpyxl huggingface_hub
 
 ---
 
-## 📂 Folder Structure
+## Folder Structure
 
 ```bash
 /data
@@ -78,7 +78,7 @@ pip install gradio pandas mutagen openpyxl huggingface_hub
 
 ---
 
-## 🔧 Usage locally
+## Usage locally
 
 1. Run the app:  
    ```bash
@@ -91,10 +91,29 @@ pip install gradio pandas mutagen openpyxl huggingface_hub
 
 ---
 
-## 🎯 Deployment on Hugging Face
+## Deployment on Hugging Face
 
 This app is designed to work on **Hugging Face Spaces** with persistent storage at `/data`.  
 1. Create a "New Space" and select "Gradio" as the "Space SDK".
 2. Upload your app code.  
 2. Place necessary files under `/data/` (See structure above).  
-3. Start the Space and begin annotating!  
+3. Start the Space and begin annotating!
+
+---
+## Citation
+
+Pessanha, F., Padovani, I., van Klaveren, J., Kaya, H., Akdag, A., & Masthoff, J. (2025). *Listening to Oral History: Emotion Annotation and Recognition in the ACT UP Oral History Project*. In **Proceedings of the 7th International Workshop on Analysis, Understanding and Promotion of Heritage Contents** (pp. 41–50). ACM. [https://doi.org/10.1145/3746273.3760204](https://doi.org/10.1145/3746273.3760204)
+
+```bibtex
+@inproceedings{Pessanha2025Listening,
+  author    = {Pessanha, Francisca and Padovani, Ian and van Klaveren, Justus and Kaya, Heysem and Akdag, Almila and Masthoff, Judith},
+  title     = {Listening to Oral History: Emotion Annotation and Recognition in the ACT UP Oral History Project},
+  booktitle = {Proceedings of the 7th International Workshop on Analysis, Understanding and Promotion of Heritage Contents},
+  series    = {SUMAC '25},
+  year      = {2025},
+  pages     = {41--50},
+  publisher = {Association for Computing Machinery},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3746273.3760204},
+  url       = {https://doi.org/10.1145/3746273.3760204}
+}
